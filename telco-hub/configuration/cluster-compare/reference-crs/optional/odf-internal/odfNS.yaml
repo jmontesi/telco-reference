@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: openshift-storage
+  annotations:
+    argocd.argoproj.io/sync-wave: "-5"
+    workload.openshift.io/allowed: management  # Environment-specific - can be absent if workload partitioning is not used
+  labels:
+    openshift.io/cluster-monitoring: "true"

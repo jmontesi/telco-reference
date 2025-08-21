@@ -1,0 +1,43 @@
+---
+# ignore-unspecified-fields: true
+apiVersion: ocs.openshift.io/v1
+kind: StorageCluster
+metadata:
+  name: ocs-storagecluster
+  namespace: openshift-storage
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  manageNodes: false
+  resources:
+    mds:
+      limits:
+        cpu: "3"  # Environment-specific - any valid CPU limit allowed
+        memory: "8Gi"  # Environment-specific - any valid memory limit allowed
+      requests:
+        cpu: "3"  # Environment-specific - any valid CPU request allowed  
+        memory: "8Gi"  # Environment-specific - any valid memory request allowed
+  monDataDirHostPath: /var/lib/rook
+  storageDeviceSets:
+  - count: 1  # Environment-specific - any valid count allowed
+    dataPVCTemplate:
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: "600Gi"  # Environment-specific - any valid storage size allowed (minimum 100GiB, maximum 4TiB)
+        storageClassName: "local-sc"  # Environment-specific - any valid storage class allowed
+        volumeMode: Block
+    name: ocs-deviceset
+    placement: {}
+    portable: false
+    replica: 3
+    resources:
+      limits:
+        cpu: "2"  # Environment-specific - any valid CPU limit allowed
+        memory: "5Gi"  # Environment-specific - any valid memory limit allowed
+      requests:
+        cpu: "2"  # Environment-specific - any valid CPU request allowed
+        memory: "5Gi"  # Environment-specific - any valid memory request allowed

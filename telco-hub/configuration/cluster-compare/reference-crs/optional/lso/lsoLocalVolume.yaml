@@ -1,0 +1,25 @@
+---
+apiVersion: "local.storage.openshift.io/v1"
+kind: "LocalVolume"
+metadata:
+  name: "local-disks"  # Any name allowed
+  namespace: "openshift-local-storage"
+  annotations:
+    argocd.argoproj.io/sync-wave: "-3"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  logLevel: Normal
+  managementState: Managed
+  nodeSelector:  # Environment-specific - flexible configuration allowed
+    nodeSelectorTerms:
+    - matchExpressions:
+      - key: cluster.ocs.openshift.io/openshift-storage
+        operator: In
+        values:
+        - ""
+  storageClassDevices:  # Can define multiple storage class devices
+    - storageClassName: "local-sc"  # Any storage class name allowed
+      forceWipeDevicesAndDestroyAllData: true
+      volumeMode: Block  # Must be either 'Block' or 'Filesystem'
+      devicePaths:  # Environment-specific - any valid paths allowed
+        - /dev/disk/by-path/pci-xxx

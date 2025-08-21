@@ -1,0 +1,31 @@
+---
+# ignore-unspecified-fields: true
+apiVersion: observability.open-cluster-management.io/v1beta2
+kind: MultiClusterObservability
+metadata:
+  name: observability
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+    mco-disable-alerting: "true"
+spec:
+  advanced:
+    retentionConfig:
+      blockDuration: 2h
+      deleteDelay: 48h
+      retentionInLocal: 24h
+      retentionResolutionRaw: 15d
+  enableDownsampling: false
+  observabilityAddonSpec:
+    enableMetrics: true
+    interval: 300
+  storageConfig:
+    storageClass:  # Environment-specific storage class name
+    alertmanagerStorageSize: 10Gi  # User-configurable storage size
+    compactStorageSize: 100Gi  # User-configurable storage size
+    metricObjectStorage:
+      key: thanos.yaml
+      name: thanos-object-storage
+    receiveStorageSize: 10Gi  # User-configurable storage size
+    ruleStorageSize: 30Gi  # User-configurable storage size
+    storeStorageSize: 100Gi  # User-configurable storage size
